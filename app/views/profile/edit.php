@@ -1,0 +1,46 @@
+<main class="feed-column">
+  <div class="feed__list">
+    <section class="form-card" aria-labelledby="edit-profile-title">
+      <h1 class="form-card__title" id="edit-profile-title">Edit profile</h1>
+      <?php require BASE_PATH . '/app/views/partials/errors.php'; ?>
+
+      <form class="composer__form" action="<?= e(url('profile/update')) ?>" method="post" enctype="multipart/form-data">
+        <?= csrf_field() ?>
+
+        <div class="profile-edit-avatar">
+          <div class="profile-card__avatar"><?= avatar_html($currentUser) ?></div>
+          <div class="form-field">
+            <label for="profile_image">Profile picture</label>
+            <input type="file" id="profile_image" name="profile_image" accept="image/jpeg,image/png,image/gif,image/webp">
+            <?php if (!empty($currentUser['profile_image'])): ?>
+              <label class="check-row"><input type="checkbox" name="remove_image" value="1"> Remove current picture</label>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="full_name">Full name</label>
+          <input class="text-input" type="text" id="full_name" name="full_name" minlength="2" maxlength="100"
+                 value="<?= e($form['full_name']) ?>" required>
+        </div>
+
+        <div class="form-field">
+          <label for="username_display">Username</label>
+          <input class="text-input" type="text" id="username_display" value="@<?= e($currentUser['username']) ?>" disabled>
+          <small class="field-hint">Usernames cannot be changed.</small>
+        </div>
+
+        <div class="form-field">
+          <label for="bio">Bio</label>
+          <textarea class="composer__textarea" id="bio" name="bio" rows="4" maxlength="300"
+                    placeholder="Tell people a little about yourself"><?= e($form['bio']) ?></textarea>
+        </div>
+
+        <div class="form-actions">
+          <a class="btn btn--ghost" href="<?= e(url('profile')) ?>">Cancel</a>
+          <button type="submit" class="composer__submit">Save profile</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</main>

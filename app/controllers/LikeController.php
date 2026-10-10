@@ -1,0 +1,22 @@
+<?php
+declare(strict_types=1);
+
+class LikeController extends Controller
+{
+    public function toggle(): void
+    {
+        $me = $this->user();
+        if ($me === null) {
+            $this->json(['ok' => false, 'message' => 'Please log in to like posts.'], 401);
+        }
+        $this->requireCsrf(true);
+
+        $postId = $this->postInt('post_id');
+        if ($postId <= 0 || !(new PostModel($this->pdo))->exists($postId)) {
+            $this->json(['ok' => false, 'message' => 'That post no longer exists.'], 404);
+        }
+
+        $result = (new LikeModel($this->pdo))->toggle($postId, (int) $me['id']);
+        $this->json(['ok' => true, 'liked' => $result['liked'], 'count' => $result['count']]);
+    }
+}
